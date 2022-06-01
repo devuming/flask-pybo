@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">  <!-- 모바일 화면 맞춤 / shrink-to-fit : 브라우저의 콘텐츠 크기 조절 막음 -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css')}}">
+    <!-- Pybo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <title>Hello, Pybo!</title>
+</head>
+<body>
+{% include "navbar.html" %} <!-- 네비게이션 바 : 유지보수 측면에서 좋음 -->
+<!-- 기본 템플릿 안에 삽입될 내용 Start -->
+{% block content %}
+{% endblock %}
+<!-- 기본 템플릿 안에 삽입될 내용 End -->
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+</body>
+</html>
