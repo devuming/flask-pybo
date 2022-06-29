@@ -17,7 +17,7 @@
         {% for question in question_list.items %}       <!-- items : 페이징 추가되면서 추가 -->
         <tr class="text-center">
             <td>{{ question_list.total - (question_list.page - 1) * question_list.per_page - loop.index0 }}</td>        <!-- 게시물 번호 : 전체 게시물 갯수 - (현재 페이지  - 1) * 페이지당 게시물 개수 - 나열 인덱스 -->
-            <td class="text-left">
+            <td class="text-start">
                 <!-- 질문 제목 -->
                 <a href="{{ url_for('question.detail', question_id=question.id) }}">{{question.subject}}</a>
                 {% if question.answer_set|length > 0 %}
