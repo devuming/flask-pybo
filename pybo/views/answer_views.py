@@ -20,7 +20,7 @@ def create(question_id):
         answer = Answer(content=content, create_date=datetime.now(), user=g.user)    # Answer 내용으로 객체 생성
         question.answer_set.append(answer)          # question에 연결된 answer db에 추가
         db.session.commit()                         # db 반영
-        return redirect(url_for('question.detail', question_id=question_id))  # 상세 페이지로 리다이렉트
+        return redirect('{}#answer_{}'.format(url_for('question.detail', question_id=question_id), answer.id))  # 상세 페이지로 리다이렉트 > 해당 답변 위치로 스크롤 이동
 
     return render_template('question/question_detail.html', question=question, form=form)        # 상세 페이지로 리다이렉트
 
@@ -37,7 +37,7 @@ def modify(answer_id):
             form.populate_obj(answer)
             answer.modify_date = datetime.now()
             db.session.commit()
-            return redirect(url_for('question.detail', question_id=answer.question.id))
+            return redirect('{}#answer_{}'.format(url_for('question.detail', question_id=answer.question.id), answer.id))
     else:
         form = AnswerForm(obj=answer)
     return render_template('answer/answer_form.html', answer=answer, form=form)

@@ -2,6 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate           # db 관련
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+from flaskext.markdown import Markdown
 
 import config   # 설정 파일
 
@@ -48,4 +49,8 @@ def create_app():
     # 필터
     from .filter import format_datetime
     app.jinja_env.filters['datetime'] = format_datetime # 필터 등록
+
+    # Markdown
+    Markdown(app, extensions=['nl2br', 'fenced_code'])
+
     return app
