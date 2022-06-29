@@ -3,7 +3,7 @@
 <!-- 질문 등록 -->
 <div class="container">
     <h5 class="my-3 border-bottom pb-2">질문등록</h5>
-    <form method="post" class="post-from my-3">     <!-- action 속성 없음 : 나 자신에게 전달 -->
+    <form method="post" class="post-form my-3">     <!-- action 속성 없음 : 나 자신에게 전달 -->
         {{ form.csrf_token }}   <!-- secret key -->
         <!-- 오류표시 Start -->
         {% for field, errors in form.errors.items() %}      <!-- form의 필드에서 error 발생 시 -->

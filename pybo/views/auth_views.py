@@ -1,12 +1,21 @@
 from flask import Blueprint, url_for, render_template, flash, request, session, g
 from werkzeug.security import generate_password_hash, check_password_hash  # 비밀번호 암호화 생성
 from werkzeug.utils import redirect
+import functools
 
 from pybo import db
 from pybo.forms import UserCreateForm, UserLoginForm
 from pybo.models import User
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+def login_required(view):       # 데코레이터 함수
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view
 
 @bp.route('/signup/', methods=('GET', 'POST'))
 def signup():

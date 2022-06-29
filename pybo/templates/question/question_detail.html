@@ -8,10 +8,17 @@
             <!-- 질문 내용 -->
             <div class="card-text" style="white-space:pre-line;">{{ question.content }}</div>
             <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2">
-                    {{ question.create_date|datetime }}
+                <div class="badge bg-light text-dark p-2 text-left">
+                    <div class="mb-2">{{ question.user.username }}</div>
+                    <div>{{ question.create_date|datetime }}</div>
                 </div>
             </div>
+            {% if g.user == question.user %}
+            <div class="my-3">
+                <a href="{{ url_for('question.modify', question_id=question.id) }}" class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="#" class="delete btn btn-sm btn-outline-secondary" data-uri="{{ url_for('question.delete', question_id=question.id) }}">삭제</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 
@@ -23,10 +30,17 @@
         <div class="card-body">
             <div class="card-text" style="white-space:pre-line;">{{ answer.content }}</div>
             <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2">
-                    {{ answer.create_date|datetime }}
+                <div class="badge bg-light text-dark p-2 text-left">
+                    <div class="mb-2">{{ answer.user.username }}</div>
+                    <div>{{ answer.create_date|datetime }} </div>
                 </div>
             </div>
+            {% if g.user == answer.user %}
+            <div class="my-3">
+                <a href="{{ url_for('answer.modify', answer_id=answer.id) }}" class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="#" class="delete btn btn-sm btn-outline-secondary" data-uri="{{ url_for('answer.delete', answer_id=answer.id) }}">삭제</a>
+            </div>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
@@ -43,9 +57,20 @@
         <!-- 오류표시 End -->
 
         <div class="mb-3">  <!-- margin-bottom -->
-            <textarea name="content" id="content" class="form-control" rows="10"></textarea>
+            <textarea {% if not g.user %}disabled{% endif %} name="content" id="content" class="form-control" rows="10"></textarea>     <!-- 로그인 안했을 경우 disabled -->
         </div>
         <input type="submit" value="답변등록" class="btn btn-primary">
     </form>
 </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".delete").on('click', function() {           // class=delete 인 버튼에서 click 이벤트 발생 시 호출 됨
+        if(confirm("정말로 삭제하시겠습니까?")){
+            location.href = $(this).data('uri');    // data-uri 호출
+        }
+    });
+});
+</script>
 {% endblock %}
