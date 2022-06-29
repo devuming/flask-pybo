@@ -1,5 +1,17 @@
 from pybo import db     # pybo.py안의 db 객체 import
 
+question_voter = db.Table(
+    'question_voter',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), primary_key=True),
+    db.Column('question_id', db.Integer, db.ForeignKey('question.id', ondelete='CASCADE'), primary_key=True)
+)   # 다대다 관계 : 하나의 사용자는 여러개의 질문에 추천가능 & 1개의 질문엔 여러 사용자가 추천 가능
+
+answer_voter = db.Table(
+    'answer_voter',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), primary_key=True),
+    db.Column('answer_id', db.Integer, db.ForeignKey('answer.id', ondelete='CASCADE'), primary_key=True)
+)   # 다대다 관계 : 하나의 사용자는 여러개의 질문에 추천가능 & 1개의 질문엔 여러 사용자가 추천 가능
+
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String(200), nullable=False)
@@ -8,6 +20,7 @@ class Question(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     user = db.relationship('User', backref=db.backref('question_set'))      # User에서 Question 역참조 가능
     modify_date = db.Column(db.DateTime(), nullable=True)
+    voter = db.relationship('User', secondary=question_voter, backref=db.backref('question_voter_set'))     # secondary > 다대다 연결
 
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +31,7 @@ class Answer(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     user = db.relationship('User', backref=db.backref('answer_set'))      # User에서 Answer 역참조 가능
     modify_date = db.Column(db.DateTime(), nullable=True)
+    voter = db.relationship('User', secondary=answer_voter, backref=db.backref('answer_voter_set'))     # secondary > 다대다 연결
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
