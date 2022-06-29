@@ -51,6 +51,6 @@ def create_app():
     app.jinja_env.filters['datetime'] = format_datetime # 필터 등록
 
     # Markdown
-    Markdown(app, extensions=['nl2br', 'fenced_code'])
+    Markdown(app, extensions=['nl2br', 'fenced_code'])      # 게시물에 마크다운 적용
 
     return app
