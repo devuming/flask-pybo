@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for
+from flask import Blueprint, url_for, current_app
 from werkzeug.utils import redirect
 
 bp = Blueprint('main', __name__, url_prefix='/')    # 루트
@@ -9,5 +9,5 @@ def hello_pybo():
 
 @bp.route('/')      # 루트로 들어온 경우
 def index():
-    3/0
+    current_app.logger.info("INFO 레벨로 출력")
     return redirect(url_for('question._list'))      # question Blueprint의 list 함수 호출
