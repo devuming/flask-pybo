@@ -9,5 +9,4 @@ def hello_pybo():
 
 @bp.route('/')      # 루트로 들어온 경우
 def index():
-    current_app.logger.info("INFO 레벨로 출력")
     return redirect(url_for('question._list'))      # question Blueprint의 list 함수 호출
