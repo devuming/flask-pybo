@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_migrate import Migrate           # db 관련
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
@@ -15,6 +15,12 @@ naming_convention = {
 # 전역변수로 선언
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
+
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+def server_error(e):
+    return render_template('500.html'), 500
 
 def create_app():
     # app 객체 생성
@@ -51,5 +57,9 @@ def create_app():
 
     # Markdown
     Markdown(app, extensions=['nl2br', 'fenced_code'])      # 게시물에 마크다운 적용
+
+    # 오류페이지
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(500, server_error)
 
     return app
