@@ -1,6 +1,5 @@
-import os
-
-BASE_DIR = os.path.dirname(__file__)
+# 개발 환경에서 사용하는 환경변수
+from config.default import *
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(os.path.join(BASE_DIR, 'pybo.db'))
 SQLALCHEMY_TRACK_MODIFICATIONS = False     # 이벤트 처리 옵션
