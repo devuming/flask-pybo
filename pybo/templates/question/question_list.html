@@ -11,6 +11,15 @@
                 <option value="popular" {% if so =='popular' %}selected{% endif %}>인기순</option>
             </select>
         </div>
+        <!-- 카테고리 -->
+        <div class="col-2">
+            <select class="form-control category">
+                <option value="total" {% if category =='total' %}selected{% endif %}>전체</option>
+                <option value="qna" {% if category =='qna' %}selected{% endif %}>Q&A</option>
+                <option value="lesson" {% if category =='lesson' %}selected{% endif %}>강좌</option>
+                <option value="free" {% if category =='free' %}selected{% endif %}>자유게시판</option>
+            </select>
+        </div>
         <!-- 검색 -->
         <div class="col-4 input-group">
             <input type="text" class="form-control kw" value="{{ kw or '' }}">
@@ -107,6 +116,7 @@
     <input type="hidden" id="kw" name="kw" value="{{ kw or '' }}">          <!-- 검색어 -->
     <input type="hidden" id="page" name="page" value="{{ page }}">          <!-- 페이지 번호 -->
     <input type="hidden" id="so" name="so" value="{{ so }}">                <!-- 정렬 기준 -->
+    <input type="hidden" id="category" name="category" value="{{ category }}">                <!-- 카테고리 기준 -->
 </form>
 {% endblock %}
 {% block script %}
@@ -125,6 +135,13 @@ $(document).ready(function(){
 
     $(".so").on('change', function() {          // 정렬 기준 선택 변경 시
         $("#so").val($(this).val());
+        $("#page").val(1);
+        $("#category").val($(".category").val());
+        $("#searchForm").submit();
+    });
+
+    $(".category").on('change', function() {          // 정렬 기준 선택 변경 시
+        $("#category").val($(this).val());
         $("#page").val(1);
         $("#searchForm").submit();
     });

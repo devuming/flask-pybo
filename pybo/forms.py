@@ -1,12 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, EmailField  # 데이터 검증을 위한 모듈
+from wtforms import StringField, TextAreaField, PasswordField, EmailField, SelectField  # 데이터 검증을 위한 모듈
 from wtforms.validators import DataRequired, Length, EqualTo, Email         # 빈 데이터 인지 검증
 
 
 class QuestionForm(FlaskForm):
     subject = StringField('제목', validators=[DataRequired('제목은 필수 입력 항목입니다.')])    # 필수 입력 TextBox : 입력 안했을시 경고
+    category = SelectField('카테고리', choices=['qna', 'lesson', 'free'])
     content = TextAreaField('내용', validators=[DataRequired('내용은 필수 입력 항목입니다.')])
-
 
 class AnswerForm(FlaskForm):
     content = TextAreaField('내용', validators=[DataRequired('내용은 필수 입력 항목입니다.')])

@@ -4,7 +4,7 @@ from werkzeug.utils import redirect
 from sqlalchemy import func
 
 from .. import db
-from pybo.models import Question, Answer, User, question_voter
+from pybo.models import Question, Answer, User, question_voter, answer_voter
 from ..forms import QuestionForm, AnswerForm        # pybo 폴더 위치
 from pybo.views.auth_views import login_required
 
@@ -14,8 +14,9 @@ bp = Blueprint('question', __name__, url_prefix='/question')
 def _list():
     # 입력 파라미터
     page = request.args.get('page', type=int, default=1)
-    kw = request.args.get('kw', type=str, default='')       # 검색 키워드
-    so = request.args.get('so', type=str, default='recent') # 정렬 기준
+    kw = request.args.get('kw', type=str, default='')               # 검색 키워드
+    so = request.args.get('so', type=str, default='recent')         # 정렬 기준
+    category = request.args.get('category', type=str, default='total')    # 카테고리 기준
 
     # 정렬
     if so == 'recommend':
@@ -39,17 +40,30 @@ def _list():
                                 User.username.ilike(search) |       # 질문작성자
                                 sub_query.c.content.ilike(search) | # 답변내용
                                 sub_query.c.username.ilike(search)  # 답변작성자
-                                )\
+                                 )\
                         .distinct()
+
+    if category != '' and category != 'total':     # 카테고리
+        question_list = question_list.filter(Question.category == category)
+        question_list = question_list.filter(Question.category == category)
+
     # 페이징
     question_list = question_list.paginate(page, per_page=10)                   # 한 페이지당 게시글 10개씩
-    return render_template('question/question_list.html', question_list=question_list, page=page, kw=kw, so=so)        # question/question_list.html페이지에 question 목록 전달
+    return render_template('question/question_list.html', question_list=question_list, page=page, kw=kw, so=so, category=category)  # question/question_list.html페이지에 question 목록 전달
 
 @bp.route('/detail/<int:question_id>/')  # question_id 변수 받음
 def detail(question_id):
     form = AnswerForm()
     question = Question.query.get_or_404(question_id)
-    return render_template('question/question_detail.html', question=question, form=form)
+
+    # 답변 추천순 정렬
+    sub_query = db.session.query(answer_voter.c.answer_id, func.count('*').label('num_voter'))\
+                          .group_by(answer_voter.c.answer_id).subquery()  # 답변 추천 수
+
+    answer_set = Answer.query.outerjoin(sub_query, Answer.id == sub_query.c.answer_id).order_by(sub_query.c.num_voter.desc(), Answer.create_date.desc())
+    answer_set.join(User).outerjoin(sub_query, sub_query.c.answer_id == Answer.id).distinct()
+
+    return render_template('question/question_detail.html', question=question, answer_set=answer_set, form=form)
 
 @bp.route('/create/', methods=('GET', 'POST'))  # question.create
 @login_required
@@ -57,7 +71,7 @@ def create():
     form = QuestionForm()
 
     if request.method == 'POST' and form.validate_on_submit():    # post 형식으로 온 것만 처리, validation 검사 됐는지
-        question = Question(subject=form.subject.data, content=form.content.data, create_date=datetime.now(), user=g.user)
+        question = Question(subject=form.subject.data, content=form.content.data, create_date=datetime.now(), user=g.user, category=form.category.data)
         db.session.add(question)
         db.session.commit()                         # db 등록
         return redirect(url_for('main.index'))      # 메인으로 이동

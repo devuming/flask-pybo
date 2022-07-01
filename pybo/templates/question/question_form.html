@@ -12,7 +12,14 @@
         </div>
         {% endfor %}
         <!-- 오류표시 End -->
-
+        <div class="mb-3">
+            <label for="category">카테고리</label>
+            <select class="form-control category" id="category" name="category">
+                <option value="qna" {% if form.category.data =='qna' %}selected{% endif %}>Q&A</option>
+                <option value="lesson" {% if form.category.data =='lesson' %}selected{% endif %}>강좌</option>
+                <option value="free" {% if form.category.data =='free' %}selected{% endif %}>자유게시판</option>
+            </select>
+        </div>
         <div class="mb-3">        <!-- bootstrap : form-group 에 마진 사라짐 > mb-3 사용ㄴ -->
             <label for="subject">제목</label>
             <input type="text" class="form-control" name="subject" id="subject" value="{{ form.subject.data or ''}}">       <!-- 오류 시 데이터 안날라가도록 처리 -->
