@@ -1,0 +1,17 @@
+<div>
+    <h5 class="border-bottom pb-2 mb-3">계정설정</h5>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link {% if menu =='base' %}active{% endif %}" href="{{ url_for('settings.base') }}">기본정보</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if menu =='image' %}active{% endif %}" href="{{ url_for('settings.image') }}">프로필 이미지</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if menu =='password' %}active{% endif %}" href="{{ url_for('settings.password') }}">비밀번호 변경</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if menu =='email' %}active{% endif %}" href="{{ url_for('settings.email') }}">이메일 수신</a>
+        </li>
+    </ul>
+</div>

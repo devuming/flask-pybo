@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include "settings_nav.html" %}
+<div>
+    <form method="post" class="post-form my-3">
+        {{ form.csrf_token }}
+        {% include "form_errors.html" %}
+        <div>
+            <label for="username">사용자명 (ID)</label>
+            <input type="text" id="username" name="username" class="form-control" value="{{ form.username.data or g.user.username }}">
+        </div>
+        <div>
+            <label for="email">이메일</label>
+            <input type="text" id="email" name="email" class="form-control" value="{{ g.user.email }}" disabled="disabled">
+        </div>
+        <div>
+            <label for="introduce">한줄소개</label>
+            <input type="text" id="introduce" name="introduce" class="form-control" value="{{ form.introduce.data or profile.introduce or ''}}">
+            <span>한줄로 자신에 대하여 얘기해 주세요</span>
+        </div>
+        <div>
+            <label for="computer">나의 첫번째 컴퓨터</label>
+            <input type="text" id="computer" name="computer" class="form-control" value="{{ form.computer.data or profile.computer or '' }}">
+            <span>가장 처음 사용했던 컴퓨터명을 알려주세요. (예: 삼보 TG-286)</span>
+        </div>
+        <div>
+            <label for="editor">좋아하는 에디터</label>
+            <input type="text" id="editor" name="editor" class="form-control" value="{{ form.editor.data or profile.editor or '' }}">
+            <span>프로그래밍 시 즐겨 사용하는 에디터를 알려주세요. (예:파이참, 비주얼스튜디오코드, vi)</span>
+        </div>
+        <button type="submit" class="btn btn-primary">저장하기</button>
+    </form>
+</div>
+{% endblock %}

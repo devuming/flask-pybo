@@ -23,3 +23,14 @@ class UserLoginForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     content = TextAreaField('내용', validators=[DataRequired()])
+
+class ProfileForm(FlaskForm):
+    username = StringField('사용자이름', validators=[DataRequired(), Length(min=3, max=25)])
+    introduce = TextAreaField('한줄소개')
+    computer = TextAreaField('나의 첫번째 컴퓨터', validators=[Length(max=120)])
+    editor = TextAreaField('좋아하는 에디터', validators=[Length(max=120)])
+
+class PasswordChangeForm(FlaskForm):
+    password = PasswordField('기존 비밀번호', validators=[DataRequired()])
+    password_new = PasswordField('새 비밀번호', validators=[DataRequired(), EqualTo('password_new2', '비밀번호가 일치하지 않습니다.')])
+    password_new2 = PasswordField('새 비밀번호 확인', validators=[DataRequired()])
