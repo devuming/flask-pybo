@@ -1,0 +1,104 @@
+{% extends 'base.html' %}    <!-- 기본 템플릿 지정 -->
+{% block content %}
+<h5 class="border-bottom pb-2 mb-3">{{ g.user.username }}</h5>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {% if menu =='base' %}active{% endif %}" href="{{ url_for('profile.base') }}">기본정보</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if menu =='question' %}active{% endif %}" href="{{ url_for('profile.question') }}">게시</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if menu =='answer' %}active{% endif %}" href="{{ url_for('profile.answer') }}">답변</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if menu =='comment' %}active{% endif %}" href="{{ url_for('profile.comment') }}">댓글</a>
+    </li>
+</ul>
+<div>
+    <!-- 기본정보 -->
+    {% if menu == 'base' %}
+    <div>
+        <span class="profile_title">파이보 스코어</span>
+        <div style="white-space:pre-line;">{{ profile.score or '0점' }}</div>
+        <span class="profile_title">한줄소개</span>
+        <div style="white-space:pre-line;">{{ profile.introduce or '나는 누구고 여긴 어딘가?' }}</div>
+        <span class="profile_title">첫번째 컴퓨터</span>
+        <div style="white-space:pre-line;">{{ profile.computer or '애니악' }}</div>
+        <span class="profile_title">좋아하는 에디터</span>
+        <div style="white-space:pre-line;">{{ profile.editor or '도구는 도구일뿐' }}</div>
+    </div>
+    <!-- 게시, 답변, 댓글 -->
+    {% else %}
+    <table class="table">
+        <thead>
+        <tr class="text-center table-dark">
+            <th>번호</th>
+            <th>구분</th>
+            <th>추천</th>
+            {% if menu == 'question' %}
+            <th style="width:50%">제목</th>
+            {% else %}
+            <th style="width:50%">내용</th>
+            {% endif %}
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if list %}  <!-- 데이터가 있는 경우 -->
+        <!-- 질문 목록 -->
+        {% for item in list.items %}       <!-- items : 페이징 추가되면서 추가 -->
+        <tr class="text-center">
+            <td>{{ list.total - (list.page - 1) * list.per_page - loop.index0 }}</td>        <!-- 게시물 번호 : 전체 게시물 갯수 - (현재 페이지  - 1) * 페이지당 게시물 개수 - 나열 인덱스 -->
+            <td><!-- 구분 -->
+                {% if item.category %}
+                {{ item.category|category }}
+                {% elif item.question.category %}
+                {{ item.question.category|category }}
+                {% elif item.answer.question.category %}
+                {{ item.answer.question.category|category }}
+                {% endif %}
+            </td>
+            <td>
+                {% if item.voter and item.voter|length > 0 %}
+                <span class="badge btn-warning px-2 py-1">{{ item.voter|length }}</span>
+                {% endif %}
+            </td>
+            <td class="text-start">
+                <!-- 게시 tab -->
+                {% if menu == 'question' %}
+                <!-- 질문 제목 -->
+                <a href="{{ url_for('question.detail', question_id=item.id) }}">{{item.subject}}</a>
+                    <!-- 답변 갯수 -->
+                    {% if item.answer_set|length > 0 %}
+                    <span class="text-danger small ml-2">{{item.answer_set|length }}</span>     <!-- 답변 갯수 -->
+                    {% endif %}
+                <!-- 게시 tab End -->
+                <!-- 답변 tab -->
+                {% elif item.question_id != None %}
+                <a href="{{ url_for('question.detail', question_id=item.question_id) }}">{{item.content}}</a>   <!-- 답변 내용 -->
+                {% elif item.answer != None %}
+                <a href="{{ url_for('question.detail', question_id=item.answer.question_id) }}">{{item.content}}</a>   <!-- 답변에 달린 댓글 내용 -->
+                {% endif %}
+            </td>
+            <td>{{ item.create_date|datetime }}</td>
+        </tr>
+        {% endfor %}
+        <!-- 질문이 없는 경우 -->
+        {% else %}
+        <tr>
+            {% if menu == 'question' %}
+            <td colspan="3">등록한 게시물이 없습니다.</td>
+            {% elif menu == 'answer' %}
+            <td colspan="3">등록한 답변이 없습니다.</td>
+            {% else %}
+            <td colspan="3">등록한 댓글이 없습니다.</td>
+            {% endif %}
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}

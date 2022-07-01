@@ -2,3 +2,9 @@
     border-top:dotted 1px #ddd;
     font-size:0.7em;
 }
+
+.profile_title {
+    font-size: 1.0em;
+    font-weight: bold;
+    margin: 3px 0;
+}

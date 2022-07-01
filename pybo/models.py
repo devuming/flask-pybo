@@ -51,3 +51,13 @@ class Comment(db.Model):
     question = db.relationship('Question', backref=db.backref('comment_set'))
     answer_id = db.Column(db.Integer, db.ForeignKey('answer.id', ondelete='CASCADE'), nullable=True)
     answer = db.relationship('Answer', backref=db.backref('comment_set'))
+
+# 사용자 프로필
+class Profile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    user = db.relationship('User', backref=db.backref('profile_set'))       # User에서 Profile 역참조 가능    
+    score = db.Column(db.Integer, nullable=False, server_default='0')       # 파이보 스코어
+    introduce = db.Column(db.Text(), nullable=True)                         # 한줄소개
+    computer = db.Column(db.String(120), nullable=True)                     # 첫번째 컴퓨터
+    editor = db.Column(db.String(120), nullable=True)                       # 좋아하는 에디터

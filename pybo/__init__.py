@@ -43,17 +43,19 @@ def create_app():
         return 'Hello, Pybo'
     '''
     # blueprint views 모듈(페이지) import
-    from .views import main_views, question_views, answer_views, auth_views, comment_views, vote_views
+    from .views import main_views, question_views, answer_views, auth_views, comment_views, vote_views, profile_views
     app.register_blueprint(main_views.bp)               # 페이지 동작은 main_views 파일에서 정의
     app.register_blueprint(question_views.bp)           # 페이지 동작은 question_views 파일에서 정의
     app.register_blueprint(answer_views.bp)             # 페이지 동작은 answer_views 파일에서 정의
     app.register_blueprint(auth_views.bp)
     app.register_blueprint(comment_views.bp)
     app.register_blueprint(vote_views.bp)
+    app.register_blueprint(profile_views.bp)
 
     # 필터
-    from .filter import format_datetime
+    from .filter import format_datetime, format_category
     app.jinja_env.filters['datetime'] = format_datetime # 필터 등록
+    app.jinja_env.filters['category'] = format_category # 카테고리 필터 등록
 
     # Markdown
     Markdown(app, extensions=['nl2br', 'fenced_code'])      # 게시물에 마크다운 적용
