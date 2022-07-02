@@ -1,5 +1,5 @@
 from datetime import datetime       # 생성일
-from flask import Blueprint, render_template, url_for, request, g
+from flask import Blueprint, render_template, url_for, request, g, flash
 from werkzeug.utils import redirect
 
 from pybo import db

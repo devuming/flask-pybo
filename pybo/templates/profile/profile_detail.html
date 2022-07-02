@@ -1,32 +1,18 @@
 {% extends 'base.html' %}    <!-- 기본 템플릿 지정 -->
 {% block content %}
-<h5 class="border-bottom pb-2 mb-3">{{ g.user.username }}</h5>
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link {% if menu =='base' %}active{% endif %}" href="{{ url_for('profile.base') }}">기본정보</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if menu =='question' %}active{% endif %}" href="{{ url_for('profile.question') }}">게시</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if menu =='answer' %}active{% endif %}" href="{{ url_for('profile.answer') }}">답변</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if menu =='comment' %}active{% endif %}" href="{{ url_for('profile.comment') }}">댓글</a>
-    </li>
-</ul>
+{% include "profile_nav.html" %}
 <div>
     <!-- 기본정보 -->
     {% if menu == 'base' %}
     <div>
         <span class="profile_title">파이보 스코어</span>
-        <div style="white-space:pre-line;">{{ profile.score or '0점' }}</div>
+        <div style="white-space:pre-line;">{{ user.score or '0점' }}</div>
         <span class="profile_title">한줄소개</span>
-        <div style="white-space:pre-line;">{{ profile.introduce or '나는 누구고 여긴 어딘가?' }}</div>
+        <div style="white-space:pre-line;">{{ user.introduce or '나는 누구고 여긴 어딘가?' }}</div>
         <span class="profile_title">첫번째 컴퓨터</span>
-        <div style="white-space:pre-line;">{{ profile.computer or '애니악' }}</div>
+        <div style="white-space:pre-line;">{{ user.computer or '애니악' }}</div>
         <span class="profile_title">좋아하는 에디터</span>
-        <div style="white-space:pre-line;">{{ profile.editor or '도구는 도구일뿐' }}</div>
+        <div style="white-space:pre-line;">{{ user.editor or '도구는 도구일뿐' }}</div>
     </div>
     <!-- 게시, 답변, 댓글 -->
     {% else %}
@@ -52,11 +38,11 @@
             <td>{{ list.total - (list.page - 1) * list.per_page - loop.index0 }}</td>        <!-- 게시물 번호 : 전체 게시물 갯수 - (현재 페이지  - 1) * 페이지당 게시물 개수 - 나열 인덱스 -->
             <td><!-- 구분 -->
                 {% if item.category %}
-                {{ item.category|category }}
+                    {{ item.category|category }}
                 {% elif item.question.category %}
-                {{ item.question.category|category }}
+                    {{ item.question.category|category }}
                 {% elif item.answer.question.category %}
-                {{ item.answer.question.category|category }}
+                    {{ item.answer.question.category|category }}
                 {% endif %}
             </td>
             <td>

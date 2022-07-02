@@ -5,9 +5,9 @@
     <form method="post" class="post-form my-3">
         {{ form.csrf_token }}
         {% include "form_errors.html" %}
-            <label for="introduce">프로필 이미지 선택</label>
+        <label for="introduce">프로필 이미지 선택</label>
         <div class="col-4 input-group">
-            <input type="text" id="introduce" name="introduce" class="form-control" value="{{ profile.image or form.introduce.data or 'Choose Image..'}}">
+            <input type="text" id="introduce" name="introduce" class="form-control" value="{{ user.image or form.introduce.data or 'Choose Image..'}}">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" id="btn_search">Browse</button>
             </div>
